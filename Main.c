@@ -1,47 +1,18 @@
 #include "Philo.h"
 
-
-void *PrintHello(void *data)
+void kill_philo(t_data *data, t_philo *philo)
 {
-	t_philo *phil;
+	int	i;
 
-	phil = (t_philo*)data;
-	printf("Hello from new thread got %d\n", phil->nb_philo);
-	access_fork(phil);
-	return (0);
+	i = -1;
+	while (++i < data->nb_philo)
+		pthread_join(philo.philo_data[i].id_thread, NULL);
+	i = -1;
+	while (++i < rules->nb_philo)
+		pthread_mutex_destroy(&(data->mutex_fork[i]));
+	pthread_mutex_destroy(&(data->mutex_write));
+	pthread_mutex_destroy(&(data->mutex_eat));
 }
-/*
-void *routine(void *philo)
-{
-
-}*/
-/*
-int main(int argc, char **argv)
-{
-	pthread_t	thread_id[5];
-	int			*t;
-	int			i;
-
-	i = -1;
-	t = malloc(sizeof(int));
-	*t = 5;
-	while (++i < 5)
-	{
-		pthread_create(&thread_id[i], NULL, PrintHello, (void*)t);
-	}
-	if (!thread_id[i])
-	{
-		printf("Le thread n'a pas été créé\n");
-		exit(1);
-	}
-	i = -1;
-	while (++i < 5)
-	{
-		printf("Le thread %d est fermé\n", i);
-		pthread_join(thread_id[i], NULL);
-	}
-	free(t);
-}*/
 
 int main(int argc, char **argv)
 {
@@ -56,9 +27,12 @@ int main(int argc, char **argv)
 	phi = init_data(argc, argv);
 	i = -1;
 	while(++i < phi.nb_philo)
-		pthread_create(&phi.philo_data[i].id_thread, NULL, PrintHello, (void*)&phi.philo_data[i]);
-	if (phi.is_dead == true)
-		while(--i >= 0)
-			pthread_join(phi.philo_data[i].id_thread, NULL);
+	{
+		if (pthread_create(&phi.philo_data[i].id_thread, NULL, routine, (void*)&phi.philo_data[i]));
+			exit(EXIT_FAILURE);
+		phi.t_last_meal = get_time();
+	}
+	check_death(phi, phi.philo);
+	kill_philo(phi, phi.philo);
 	printf("%d - %d - %d - %d - %d\n", phi.time_die, phi.time_eat, phi.time_sleep, phi.nb_eat, phi.rem_eat);
 }

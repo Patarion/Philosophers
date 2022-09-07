@@ -17,18 +17,18 @@ struct s_data;
 struct s_philo;
 
 
-typedef struct s_data 
+typedef struct s_philo
 {
     int             id_phil;
     int             nb_meals;
     int             id_l_fork;
     int             id_r_fork;
     long long int   t_last_meal;
-    struct s_philo  *data;
+    struct s_data  *data;
     pthread_t       id_thread;
-}   t_data;
+}   t_philo;
 
-typedef struct s_philo
+typedef struct s_data
 {
     int             nb_philo;
     int             time_die;
@@ -36,12 +36,14 @@ typedef struct s_philo
     int             time_sleep;
     int             nb_eat;
     bool            is_dead;
-    int             rem_eat;
+    bool            rem_eat;
+    int             rest_eat;
     long long int   init_time;
-    t_data   philo_data[MAX_PHILO];
+    t_philo   philo_data[MAX_PHILO];
     pthread_mutex_t mutex_fork[MAX_PHILO];
     pthread_mutex_t mutex_write;
-}   t_philo;
+    pthread_mutex_t mutex_eat;
+}   t_data;
 
 int             only_digit(char *arg, int arg_num);
 int             is_int(char *arg, int arg_num);

@@ -74,13 +74,15 @@ t_philo init_data(int argc, char **argv)
     philo.time_eat = to_int(argv[3], 3);
     philo.time_sleep = to_int(argv[4], 4);
     philo.is_dead = true;
+    philo.rem_eat = true;
     philo.nb_eat = 0;
     philo.init_time = get_time();
     if (argc == 5)
-        philo.rem_eat = INT_MAX;
+        philo.rest_eat = INT_MAX;
     else if (argc == 6)
-        philo.rem_eat = to_int(argv[5], 5);
-    if (pthread_mutex_init(&philo.mutex_write, NULL) != 0)
+        philo.rest_eat = to_int(argv[5], 5);
+    if (pthread_mutex_init(&philo.mutex_write, NULL) != 0 || 
+        pthread_mutex_init(&philo.mutex_eat, NULL) != 0)
         erreur_case(5, 0);
     init_philo(&philo);
     return (philo);

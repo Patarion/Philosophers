@@ -65,15 +65,15 @@ int is_valid(char *arg, int arg_num)
     return (0);
 }
 
-t_philo init_data(int argc, char **argv)
+t_data init_data(int argc, char **argv)
 {
-    t_philo  philo;
+    t_data  philo;
 
     philo.nb_philo = to_int(argv[1], 0);
     philo.time_die = to_int(argv[2], 2);
     philo.time_eat = to_int(argv[3], 3);
     philo.time_sleep = to_int(argv[4], 4);
-    philo.is_dead = true;
+    philo.is_dead = false;
     philo.rem_eat = true;
     philo.nb_eat = 0;
     philo.init_time = get_time();
@@ -88,13 +88,14 @@ t_philo init_data(int argc, char **argv)
     return (philo);
 }
 
-void init_philo(t_philo *philo)
+void init_philo(t_data *philo)
 {
     int i;
 
     i = philo->nb_philo;
-    while (--i)
+    while (--i >= 0)
     {
+        printf("%p\n", philo);
         philo->philo_data[i].id_phil = i;
         philo->philo_data[i].nb_meals = 0;
         philo->philo_data[i].id_l_fork = i;

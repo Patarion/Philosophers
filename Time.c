@@ -19,7 +19,7 @@ void    smart_sleep(long long time, t_data *data)
     c_time = get_time();
     while(data->is_dead != true)
     {
-        if ((c_time - get_time()) >= time)
+        if ((get_time() - c_time) >= time)
             break ;
         usleep(50);
     }

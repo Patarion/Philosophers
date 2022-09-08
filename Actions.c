@@ -1,21 +1,24 @@
-void philo_eats(t_philo philo)
+#include "Philo.h"
+
+void philo_eats(t_philo *philo)
 {
     t_data *data;
 
     data = philo->data;
     pthread_mutex_lock(&(data->mutex_fork[philo->id_l_fork]));
-    print_action(data, philo->id, "a pris une fourchette");
+    print_action(data, philo->id_phil, "took a fork");
     pthread_mutex_lock(&(data->mutex_fork[philo->id_r_fork]));
-    print_action(data, philo->id, "a pris une fourchette");
+    print_action(data, philo->id_phil, "took a fork");
     pthread_mutex_lock(&(data->mutex_eat));
+    print_action(data, philo->id_phil, "is eating");    
     smart_sleep(data->time_eat, data);
-    philo->nb_eat++;
+    philo->nb_meals++;
     pthread_mutex_unlock(&(data->mutex_eat));
     pthread_mutex_unlock(&(data->mutex_fork[philo->id_l_fork]));
     pthread_mutex_unlock(&(data->mutex_fork[philo->id_r_fork]));
 }
 
-int routine(void *philo_data)
+void *routine(void *philo_data)
 {
     t_philo *philo;
     t_data  *data;
@@ -24,15 +27,16 @@ int routine(void *philo_data)
     data = philo->data;
     if (philo->id_phil %2)
         usleep(15000);
-    while (philo->is_dead != true)
+    while (data->is_dead != true)
     {
         philo_eats(philo);
         if (data->rem_eat == false)
             break ;
-        print_action(data, philo->id, "is sleeping");
+        print_action(data, philo->id_phil, "is sleeping");
         smart_sleep(data->time_sleep, data);
-        print_action(data, philo->id, "is thinking");
+        print_action(data, philo->id_phil, "is thinking");
     }
+    return (0);
 }
 
 void print_action(t_data *data, int id, char *string)
@@ -56,11 +60,11 @@ void check_death(t_data *data, t_philo *philo)
         i = -1;
         while (++i < data->nb_philo && (data->is_dead != true))
         {
-            phtread_mutex_lock(&(data->mutex_eat));
-            if (philo[i].t_last_meal - get_time(()) > data->time_die)
+            pthread_mutex_lock(&(data->mutex_eat));
+            if ((philo[i].t_last_meal - get_time()) > data->time_die)
             {
                 print_action(data, i, "est mort");
-                data->is_dead == true;
+                data->is_dead = true;
             }
             pthread_mutex_unlock(&(data->mutex_eat));
             usleep(100);
@@ -68,7 +72,7 @@ void check_death(t_data *data, t_philo *philo)
         if (data->is_dead == true)
             break ;
         i = -1;
-        while (data->rest_eat != INT_MAX && i < data->nb_philo && p[i].nb_eat >= data->rest_eat)
+        while (data->rest_eat != INT_MAX && i < data->nb_philo && data->philo_data[i].nb_meals >= data->rest_eat)
             i++;
         if (i == data->nb_philo)
             data->rem_eat = false;

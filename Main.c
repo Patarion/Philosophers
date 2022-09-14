@@ -1,12 +1,9 @@
 #include "Philo.h"
 
-void kill_philo(t_data *data, t_philo *philo)
+void kill_philo(t_data *data)
 {
 	int	i;
 
-	i = -1;
-	while (++i < data->nb_philo)
-		pthread_join((data->philo_data[i].id_thread), NULL);
 	i = -1;
 	while (++i < data->nb_philo)
 		pthread_mutex_destroy(&(data->mutex_fork[i]));
@@ -17,22 +14,28 @@ void kill_philo(t_data *data, t_philo *philo)
 int main(int argc, char **argv)
 {
 	int				i;
+	int				err;
 	t_data			data;
 
-	i = 2;
-	if(argc < 5 || argc > 6)
-		erreur_case(1, 0);
-	while(is_valid(argv[i], i) == 0 && i < (argc - 1))
-		i++;
+	i = 0;
+	err = 0;
+	while(++i < (argc - 1) && (is_valid(argv[i], i)) == err)
+		;
+	if (i < (argc - 1))
+		err = 1;
 	data = init_data(argc, argv);
 	i = -1;
-	while(++i < data.nb_philo)
+	while(++i < data.nb_philo && err == 0)
 	{
-		if (pthread_create(&data.philo_data[i].id_thread, NULL, routine, (void*)&data.philo_data[i]) != 0)
-			exit(EXIT_FAILURE);
+		if (pthread_create(&data.philo_data[i].id_thread, NULL, 
+			routine, (void*)&data.philo_data[i]) != 0)
+			break ;
 		data.philo_data[i].t_last_meal = get_time();
 	}
-	check_death(&data, data.philo_data);
-	kill_philo(&data, data.philo_data);
-	printf("%d - %d - %d - %d - %d\n", data.time_die, data.time_eat, data.time_sleep, data.nb_eat, data.rem_eat);
+	if (i == data.nb_philo && err == 0)
+	{
+		while (check_death(&data, data.philo_data) != 1)
+			;
+		kill_philo(&data);
+	}
 }

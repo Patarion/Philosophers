@@ -45,7 +45,10 @@ int to_int(char *arg, int arg_num)
     if (arg_num == 1 && arg != NULL)
         is_valid(arg, 1);
     else if (arg == NULL)
+    {
         erreur_case(1, 0);
+        return (1);
+    }
     i = 0;
     nbr = 0;
     while(arg[i] != '\0')
@@ -95,7 +98,6 @@ void init_philo(t_data *philo)
     i = philo->nb_philo;
     while (--i >= 0)
     {
-        printf("%p\n", philo);
         philo->philo_data[i].id_phil = i;
         philo->philo_data[i].nb_meals = 0;
         philo->philo_data[i].id_l_fork = i;

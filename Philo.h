@@ -49,14 +49,18 @@ int             only_digit(char *arg, int arg_num);
 int             is_int(char *arg, int arg_num);
 int             to_int(char *arg, int arg_num);
 int             is_valid(char *arg, int arg_num);
-void            erreur_case(int erreur_num, int arg_num);
-t_data         init_data(int argc, char **argv);
+int             erreur_case(int erreur_num, int arg_num);
+t_data          init_data(int argc, char **argv);
 void            init_philo(t_data *philo);
 long long int   get_time();
 void            philo_eats(t_philo *philo);
 void            smart_sleep(long long time, t_data *data);
 void            *routine(void *philo_data);
 void            print_action(t_data *data, int id, char *string);
-void            check_death(t_data *data, t_philo *philo);
+int             check_death(t_data *data, t_philo *philo);
+void            kill_philo(t_data *data);
+void            check_meals(t_data *data);
+int             nul_var(int arg_num);
+
 
 #endif

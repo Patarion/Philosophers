@@ -1,6 +1,6 @@
 NAME = philo
 
-SRCS = Actions.c Erreur.c Main.c Parsing.c Time.c
+SRCS = Actions.c Erreur.c Main.c Parsing.c Time.c Init.c
 
 CC = gcc -g
 CFLAGS = -Wall -Werror -Wextra

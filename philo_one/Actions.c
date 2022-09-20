@@ -58,7 +58,7 @@ void	*routine(void *philo_data)
 	philo = (t_philo *)philo_data;
 	data = philo->data;
 	if (philo->id_phil % 2)
-		usleep(data->time_die * 100);
+		usleep(500);
 	while (data->is_dead != true && data->rem_eat != false)
 	{
 		philo_eats(philo);

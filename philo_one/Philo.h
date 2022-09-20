@@ -22,7 +22,7 @@
 
 # define INT_MIN -2147483648
 # define INT_MAX 2147483647
-# define MAX_PHILO 200
+# define MAX_PHILO 500
 
 struct	s_data;
 struct	s_philo;

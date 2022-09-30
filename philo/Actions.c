@@ -41,7 +41,7 @@ void	check_meals(t_data *data)
 	int	i;
 
 	i = -1;
-	while (data->philo_data[++i]. nb_meals == data->rest_eat)
+	while (data->philo_data[++i]. nb_meals >= data->rest_eat)
 		;
 	if (i == data->nb_philo)
 	{
